@@ -1,0 +1,84 @@
+'use strict'
+
+const test = require('ava')
+const HTMLis = require('./helper/html-is')
+
+const hyperstatic = require('..')
+
+test('all urls are absolutes', async t => {
+  const url = 'https://audiense.com'
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preload" href="/wp-content/themes/social-bro/static/script.js" as="script">
+    <title>Document</title>
+  </head>
+  <body>
+    <div>Hello world</div>
+  </body>
+  </html>
+  `
+
+  HTMLis(
+    t,
+    await hyperstatic({ html, url }),
+    `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preload" href="https://audiense.com/wp-content/themes/social-bro/static/script.js" as="script">
+    <title>Document</title>
+  </head>
+  <body>
+    <div>Hello world</div>
+  </body>
+  </html>
+  `
+  )
+})
+
+test('html compilant, not xml', async t => {
+  const url = 'https://audiense.com'
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preload" href="/wp-content/themes/social-bro/static/script.js" as="script" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>Hello world</div>
+  </body>
+  </html>
+  `
+
+  HTMLis(
+    t,
+    await hyperstatic({ html, url }),
+    `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preload" href="https://audiense.com/wp-content/themes/social-bro/static/script.js" as="script">
+    <title>Document</title>
+  </head>
+  <body>
+    <div>Hello world</div>
+  </body>
+  </html>
+  `
+  )
+})
