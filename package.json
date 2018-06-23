@@ -1,5 +1,5 @@
 {
-  "name": "hyperstatic-core",
+  "name": "@hyperstatic/core",
   "description": "The bowerls of the beast",
   "homepage": "https://documentup.com/hyperstatic/hyperstatic-core",
   "version": "0.0.0",
@@ -17,6 +17,7 @@
   "keywords": [],
   "dependencies": {
     "cheerio": "~1.0.0-rc.2",
+    "debug": "~3.1.0",
     "html-urls": "~1.0.9"
   },
   "devDependencies": {
@@ -43,7 +44,7 @@
     "precommit": "lint-staged",
     "pretest": "npm run lint",
     "pretty": "prettier-standard index.js {core,test,bin,scripts}/**/*.js --single-quote --print-width 100",
-    "test": "nyc ava"
+    "test": "nyc ava test/*.js"
   },
   "license": "MIT",
   "lint-staged": {
