@@ -46,24 +46,24 @@ const getContent = async ({ html, url, ...opts }) => {
   return { html: bundleHtml, urls }
 }
 
-const bundler = async (
-  url,
-  { cache, emitter, concurrence, output, prerender, ...opts }
-) => {
+const bundler = async (url, { cache, emitter, output, prerender, ...opts }) => {
   const { html: originalHtml } = await getHTML(url, { prerender })
   const { urls, html } = await getContent({ html: originalHtml, url, opts })
   const downloader = bundleFile({ cache, output, emitter })
   const filename = getFileName(new URL(url))
   emitter.emit('url', { url, filename })
-  await aigle.eachLimit(urls, concurrence, downloader)
+  await aigle.each(urls, downloader)
   await outputFile(`${output}/${filename}`, html)
   console.log()
 }
 
-const bundle = async ({ urls, emitter, cache, bundler, output, ...opts }) => {
+const bundle = async (
+  urls,
+  { concurrence, emitter, cache, output, ...opts }
+) => {
   await emptyDir(output)
   let time = timeSpan()
-  await aigle.eachSeries(urls, url =>
+  await aigle.eachLimit(urls, concurrence, url =>
     bundler(url, { cache, emitter, output, ...opts })
   )
   time = time()
@@ -76,7 +76,7 @@ module.exports = (
   { output, cache = new Set(), emitter = mitt(), ...opts }
 ) => {
   getUrls(targetUrls)
-    .then(urls => bundle({ urls, bundler, output, emitter, cache }))
+    .then(urls => bundle(urls, { output, emitter, cache, ...opts }))
     .catch(error => emitter.emit('error', error))
 
   return emitter

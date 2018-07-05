@@ -14,9 +14,8 @@ module.exports = ($, url, { absoluteUrls }) =>
       if (!isNil(attr)) {
         try {
           const resourceUrl = getUrl(url, attr)
-          const newAttr = absoluteUrls
-            ? resourceUrl
-            : new URL(resourceUrl).pathname
+          const { pathname, search } = new URL(resourceUrl)
+          const newAttr = absoluteUrls ? resourceUrl : `${pathname}${search}`
           debug(attr, '→', newAttr)
           el.attr(propName, newAttr)
         } catch (err) {

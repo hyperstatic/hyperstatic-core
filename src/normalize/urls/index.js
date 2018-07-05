@@ -9,12 +9,13 @@ const BLACKLIST_URLS = [{ tld: 'sh', domain: 'now' }]
 
 const isFile = url => {
   const isBlackListedUrl = some(BLACKLIST_URLS, blacklistUrl => {
-    const parsedUrl = parseDomain(url)
+    const parsedUrl = parseDomain(url) || {}
     return (
       blacklistUrl.tld === parsedUrl.tld &&
       blacklistUrl.domain === parsedUrl.domain
     )
   })
+
   return !isBlackListedUrl && isFileUrl(url)
 }
 
