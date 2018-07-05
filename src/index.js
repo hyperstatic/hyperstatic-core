@@ -78,6 +78,7 @@ module.exports = (targetUrls, opts) => {
     .then(({ files, bytes }) => {
       emitter.emit('end', { files, bytes, time })
     })
+    .catch(err => emitter.emit('error', err))
 
   return emitter
 }
