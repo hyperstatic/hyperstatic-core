@@ -54,7 +54,6 @@ const bundler = async (url, { cache, emitter, output, prerender, ...opts }) => {
   emitter.emit('url', { url, filename })
   await aigle.each(urls, downloader)
   await outputFile(`${output}/${filename}`, html)
-  console.log()
 }
 
 const bundle = async (
