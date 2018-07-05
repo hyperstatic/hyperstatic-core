@@ -1,6 +1,6 @@
 'use strict'
 
-const { outputFile } = require('fs-extra')
+const { emptyDir, outputFile } = require('fs-extra')
 
 const timeSpan = require('time-span')
 
@@ -30,6 +30,7 @@ const getContent = async ({ html, url, ...opts }) => {
     url,
     ...opts
   })
+
   const { urls: originalUrls } = await normalize({
     html,
     url,
@@ -45,14 +46,10 @@ const getContent = async ({ html, url, ...opts }) => {
   return { html: bundleHtml, urls }
 }
 
-const createBundleUrls = ({
-  cache,
-  emitter,
-  concurrence,
-  output,
-  prerender,
-  ...opts
-}) => async url => {
+const bundler = async (
+  url,
+  { cache, emitter, concurrence, output, prerender, ...opts }
+) => {
   const { html: originalHtml } = await getHTML(url, { prerender })
   const { urls, html } = await getContent({ html: originalHtml, url, opts })
   const downloader = bundleFile({ cache, output, emitter })
@@ -63,22 +60,24 @@ const createBundleUrls = ({
   console.log()
 }
 
-module.exports = (targetUrls, opts) => {
-  const cache = new Set()
-  const emitter = mitt()
-  const bundleUrls = createBundleUrls({ cache, emitter, ...opts })
+const bundle = async ({ urls, emitter, cache, bundler, output, ...opts }) => {
+  await emptyDir(output)
   let time = timeSpan()
+  await aigle.eachSeries(urls, url =>
+    bundler(url, { cache, emitter, output, ...opts })
+  )
+  time = time()
+  const { files, bytes } = await countFiles(output)
+  emitter.emit('end', { urls: Array.from(cache), files, bytes, time })
+}
 
+module.exports = (
+  targetUrls,
+  { output, cache = new Set(), emitter = mitt(), ...opts }
+) => {
   getUrls(targetUrls)
-    .then(urls => aigle.eachSeries(urls, bundleUrls))
-    .then(() => {
-      time = time()
-    })
-    .then(() => countFiles(opts.output))
-    .then(({ files, bytes }) => {
-      emitter.emit('end', { files, bytes, time })
-    })
-    .catch(err => emitter.emit('error', err))
+    .then(urls => bundle({ urls, bundler, output, emitter, cache }))
+    .catch(error => emitter.emit('error', error))
 
   return emitter
 }
