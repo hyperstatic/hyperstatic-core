@@ -1,6 +1,6 @@
 'use strict'
 
-const debug = require('debug')('hyperstatic:normalize-urls')
+const debug = require('debug')('hyperstatic:normalize')
 const { getUrl } = require('@metascraper/helpers')
 const { forEach, isNil } = require('lodash')
 const { TAGS } = require('html-urls')
