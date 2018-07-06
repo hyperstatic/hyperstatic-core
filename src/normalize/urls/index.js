@@ -2,8 +2,8 @@
 
 const parseDomain = require('parse-domain')
 const isFileUrl = require('check-file')
-const { some } = require('lodash')
 const htmlUrls = require('html-urls')
+const { some } = require('lodash')
 
 const BLACKLIST_URLS = [{ tld: 'sh', domain: 'now' }]
 

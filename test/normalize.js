@@ -47,7 +47,7 @@ test('search as part of the url', async t => {
   )
 })
 
-test('absoluteUrls options', async t => {
+test('absoluteUrls option', async t => {
   const { html } = await hyperstatic({
     html: `<html><head><link rel="preload" href="/wp-content/themes/social-bro/static/script.js" as="script"></head><body></body></html>`,
     url: 'https://google.com',
@@ -57,5 +57,19 @@ test('absoluteUrls options', async t => {
     t,
     html,
     `<html><head><link rel="preload" href="https://google.com/wp-content/themes/social-bro/static/script.js" as="script"></head><body></body></html>`
+  )
+})
+
+test('normalizeHttp option', async t => {
+  const { html } = await hyperstatic({
+    html: `<html><head><link rel="preload" href="http://google.com/foo.txt" as="script"></head><body></body></html>`,
+    url: 'http://google.com',
+    absoluteUrls: true,
+    normalizeHttp: true
+  })
+  HTMLis(
+    t,
+    html,
+    `<html><head><link rel="preload" href="https://google.com/foo.txt" as="script"></head><body></body></html>`
   )
 })
