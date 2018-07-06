@@ -43,7 +43,7 @@ test('search as part of the url', async t => {
   HTMLis(
     t,
     html,
-    `<html><head></head><body><a href="/common/ssi/cgi-bin/ssialias?subtype=XB&amp;infotype=PM&amp;appname=GBSE_GB_TI_USEN&amp;htmlfid=GBE03593USEN&amp;attachment=GBE03593USEN.PDF"></a></body></html>`
+    `<html><head></head><body><a href="www-01/common/ssi/cgi-bin/ssialias?subtype=XB&amp;infotype=PM&amp;appname=GBSE_GB_TI_USEN&amp;htmlfid=GBE03593USEN&amp;attachment=GBE03593USEN.PDF"></a></body></html>`
   )
 })
 

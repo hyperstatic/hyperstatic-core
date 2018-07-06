@@ -1,7 +1,7 @@
 'use strict'
 
-const aigle = require('aigle')
 const fromXML = require('xml-urls')
+const aigle = require('aigle')
 
 const { isXmlUrl } = fromXML
 

@@ -19,7 +19,7 @@ const isFile = url => {
   return !isBlackListedUrl && isFileUrl(url)
 }
 
-module.exports = async ({ html, url }) => {
-  const extractedUrls = await htmlUrls({ html, url })
+module.exports = async ({ html, url, ...opts }) => {
+  const extractedUrls = await htmlUrls({ html, url, ...opts })
   return extractedUrls.map(item => item.normalizedUrl).filter(isFile)
 }

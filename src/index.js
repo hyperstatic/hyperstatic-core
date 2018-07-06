@@ -1,9 +1,7 @@
 'use strict'
 
 const { emptyDir, outputFile } = require('fs-extra')
-
 const timeSpan = require('time-span')
-
 const { promisify } = require('util')
 const getHTML = require('html-get')
 const aigle = require('aigle')
@@ -11,16 +9,15 @@ const mitt = require('mitt')
 
 const countFiles = promisify(require('count-files'))
 
-const getUrls = require('./get-urls')
-const bundleFile = require('./file')
 const normalize = require('./normalize')
+const getUrls = require('./get-urls')
+const bundleFile = require('./bundle-file')
 
 const RE_LAST_TRAILING_SLASH = /\/$/
 
 const getFileName = ({ pathname }) => {
   const filename =
     pathname === '/' ? 'index' : pathname.replace(RE_LAST_TRAILING_SLASH, '')
-
   return `${filename}.html`
 }
 
