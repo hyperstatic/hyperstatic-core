@@ -9,15 +9,15 @@ const url = require('url')
 
 const { URL } = url
 
-const getBundleUrl = (targetUrl, { absoluteUrls }) => {
-  if (absoluteUrls) return targetUrl
-  const { pathname, search } = new URL(targetUrl)
-  const { subdomain } = parseDomain(targetUrl)
+const getBundleUrl = (url, resourceUrl) => {
+  const { pathname, search } = new URL(resourceUrl)
+  const { domain, subdomain } = parseDomain(resourceUrl)
+  if (domain !== parseDomain(url).domain) return resourceUrl
   const baseUrl = `${pathname}${search}`
-  return subdomain ? `${subdomain}${baseUrl}` : baseUrl
+  return subdomain ? `/${subdomain}${baseUrl}` : baseUrl
 }
 
-module.exports = ($, url, { absoluteUrls, ...opts }) =>
+module.exports = ($, url, opts) =>
   forEach(TAGS, (htmlTags, propName) =>
     $(htmlTags.join(',')).each(function () {
       const el = $(this)
@@ -25,7 +25,7 @@ module.exports = ($, url, { absoluteUrls, ...opts }) =>
       if (!isNil(attr)) {
         try {
           const resourceUrl = getUrl(url, attr, opts)
-          const newAttr = getBundleUrl(resourceUrl, { absoluteUrls })
+          const newAttr = getBundleUrl(url, resourceUrl)
           debug(attr, '→', newAttr)
           el.attr(propName, newAttr)
         } catch (err) {
