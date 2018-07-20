@@ -17,7 +17,7 @@ test('resolve relatives urls from the markup', macro, {
     url: 'https://audiense.com'
   },
   output: {
-    html: `<html><head><link rel="preload" href="/wp-content/themes/social-bro/static/script.js" as="script"></head><body></body></html>`
+    html: `<html><head><link rel="preload" href="/audiense.com/wp-content/themes/social-bro/static/script.js" as="script"></head><body></body></html>`
   }
 })
 
@@ -28,7 +28,7 @@ test('resolve relatives urls from the markup on the same domain', macro, {
     url: 'https://audiense.com'
   },
   output: {
-    html: `<html><head><link rel="preload" href="/wp-content/themes/social-bro/static/script.js" as="script"></head><body></body></html>`
+    html: `<html><head><link rel="preload" href="/audiense.com/wp-content/themes/social-bro/static/script.js" as="script"></head><body></body></html>`
   }
 })
 
@@ -39,7 +39,18 @@ test('search as part of the url resolved from the markup', macro, {
     url: 'https://audiense.com'
   },
   output: {
-    html: `<html><head><link rel="preload" href="/test.js?hello=world" as="script"></head><body></body></html>`
+    html: `<html><head><link rel="preload" href="/audiense.com/test.js?hello=world" as="script"></head><body></body></html>`
+  }
+})
+
+test('resolve relatives urls from the markup on external domain', macro, {
+  input: {
+    html:
+      '<html><head><link rel="preload" href="https://d33wubrfki0l68.cloudfront.net/css/style.css" as="script"></head><body></body></html>',
+    url: 'https://audiense.com'
+  },
+  output: {
+    html: `<html><head><link rel="preload" href="/d33wubrfki0l68.cloudfront.net/css/style.css" as="script"></head><body></body></html>`
   }
 })
 
@@ -50,7 +61,7 @@ test('subdomain as part of the url resolved from the markup', macro, {
     url: 'https://audiense.com'
   },
   output: {
-    html: `<html><head><link rel="preload" href="/www/test.js?hello=world" as="script"></head><body></body></html>`
+    html: `<html><head><link rel="preload" href="/www.audiense.com/test.js?hello=world" as="script"></head><body></body></html>`
   }
 })
 

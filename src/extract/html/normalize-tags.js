@@ -4,18 +4,15 @@ const debug = require('debug')('hyperstatic:normalize')
 const debugError = require('debug')('hyperstatic:normalize:error')
 const { getUrl } = require('@metascraper/helpers')
 const { forEach, isNil } = require('lodash')
-const parseDomain = require('parse-domain')
 const { TAGS } = require('html-urls')
 const url = require('url')
 
 const { URL } = url
 
-const getBundleUrl = (url, resourceUrl) => {
-  const { pathname, search } = new URL(resourceUrl)
-  const { domain, subdomain } = parseDomain(resourceUrl)
-  if (domain !== parseDomain(url).domain) return resourceUrl
+const getBundleUrl = (url, attr) => {
+  const { pathname, search, hostname } = new URL(attr)
   const baseUrl = `${pathname}${search}`
-  return subdomain ? `/${subdomain}${baseUrl}` : baseUrl
+  return `/${hostname}${baseUrl}`
 }
 
 module.exports = ($, url, opts) =>

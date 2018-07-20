@@ -5,7 +5,7 @@ const isFileUrl = require('check-file')
 const htmlUrls = require('html-urls')
 const { some, chain } = require('lodash')
 
-const BLACKLIST_URLS = [{ tld: 'sh', domain: 'now' }]
+const BLACKLIST_URLS = [{ domain: 'now', tld: 'sh' }]
 
 const isFile = url => {
   const isBlackListedUrl = some(BLACKLIST_URLS, blacklistUrl => {

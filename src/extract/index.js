@@ -7,7 +7,7 @@ module.exports = async opts => {
   // // TODO: Normalize CSS
   const html = await extractHtml(opts)
   // // TODO: Add URLs from CSS
-  const [bundleUrls, originalUrls] = await Promise.all([
+  const [originalUrls, bundleUrls] = await Promise.all([
     extractUrls(opts),
     extractUrls({ ...opts, html })
   ])
