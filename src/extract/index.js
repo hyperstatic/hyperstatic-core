@@ -4,13 +4,12 @@ const extractHtml = require('./html')
 const extractUrls = require('./urls')
 
 module.exports = async opts => {
-  // TODO: Normalize CSS
+  // // TODO: Normalize CSS
   const html = await extractHtml(opts)
-
-  // TODO: Add URLs from CSS
+  // // TODO: Add URLs from CSS
   const [bundleUrls, originalUrls] = await Promise.all([
     extractUrls(opts),
-    extractUrls(...opts, { html })
+    extractUrls({ ...opts, html })
   ])
 
   const urls = originalUrls.map((originalUrl, index) => ({
