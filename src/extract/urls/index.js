@@ -3,7 +3,7 @@
 const parseDomain = require('parse-domain')
 const isFileUrl = require('check-file')
 const htmlUrls = require('html-urls')
-const { some } = require('lodash')
+const { some, chain } = require('lodash')
 
 const BLACKLIST_URLS = [{ tld: 'sh', domain: 'now' }]
 
@@ -19,7 +19,8 @@ const isFile = url => {
   return !isBlackListedUrl && isFileUrl(url)
 }
 
-module.exports = async ({ html, url, ...opts }) => {
-  const extractedUrls = await htmlUrls({ html, url, ...opts })
-  return extractedUrls.map(item => item.normalizedUrl).filter(isFile)
-}
+module.exports = async ({ html, url, ...opts }) =>
+  chain(await htmlUrls({ html, url, ...opts }))
+    .map('normalizedUrl')
+    .filter(isFile)
+    .value()

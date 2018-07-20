@@ -11,8 +11,8 @@ const mitt = require('mitt')
 const countFiles = promisify(require('count-files'))
 
 const bundleFile = require('./bundle-file')
-const normalize = require('./normalize')
 const getUrls = require('./get-urls')
+const extract = require('./extract')
 
 const RE_LAST_TRAILING_SLASH = /\/$/
 
@@ -27,7 +27,7 @@ const bundler = async (
   { total, cache, emitter, output, prerender, ...opts }
 ) => {
   const { html: originalHtml } = await getHTML(url, { prerender })
-  const { urls, html } = await normalize({ html: originalHtml, url, opts })
+  const { urls, html } = await extract({ html: originalHtml, url, opts })
   const downloader = bundleFile({ cache, output, emitter })
   const filename = getFileName(new URL(url))
   let time = timeSpan()
