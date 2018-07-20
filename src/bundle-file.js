@@ -23,7 +23,7 @@ module.exports = ({ output, emitter, cache }) => async url => {
     emitter.emit('file:created', { pathname })
   } catch (err) {
     await outputFile(filepath, data)
-    emitter.emit('file:error', { pathname })
+    emitter.emit('file:error', { url: originalUrl, bundleUrl, pathname, err })
   }
 
   cache.add(bundleUrl)

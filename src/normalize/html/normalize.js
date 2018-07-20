@@ -1,6 +1,7 @@
 'use strict'
 
 const debug = require('debug')('hyperstatic:normalize')
+const debugError = require('debug')('hyperstatic:normalize:error')
 const { getUrl } = require('@metascraper/helpers')
 const { forEach, isNil } = require('lodash')
 const parseDomain = require('parse-domain')
@@ -26,10 +27,10 @@ module.exports = ($, url, opts) =>
         try {
           const resourceUrl = getUrl(url, attr, opts)
           const newAttr = getBundleUrl(url, resourceUrl)
-          debug(attr, '→', newAttr)
+          debug(resourceUrl, '→', newAttr)
           el.attr(propName, newAttr)
         } catch (err) {
-          debug(attr, '→', err.message || err)
+          debugError(attr, '→', err.message || err)
         }
       }
     })
