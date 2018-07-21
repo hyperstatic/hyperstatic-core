@@ -2,6 +2,7 @@
 
 const { outputFile } = require('fs-extra')
 const download = require('download')
+const cssUrls = require('css-urls')
 const { URL } = require('url')
 const path = require('path')
 
@@ -19,6 +20,7 @@ module.exports = ({ output, emitter, cache }) => async url => {
 
   try {
     data = await download(originalUrl)
+    if (cssUrls.isCss(originalUrl)) console.log('NEED TO REWRITE', originalUrl)
     await outputFile(filepath, data)
     emitter.emit('file:created', { pathname })
   } catch (err) {

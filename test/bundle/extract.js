@@ -1,9 +1,9 @@
 'use strict'
 
 const test = require('ava')
-const prettyHTML = require('./helper/pretty-html')
+const prettyHTML = require('../helper/pretty-html')
 
-const extract = require('../src/extract')
+const extract = require('../../src/bundle/extract')
 
 const macro = async (t, { input, output }) => {
   const { html: outputHtml, urls: outputUrls } = await extract(input)
