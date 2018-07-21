@@ -20,7 +20,8 @@ module.exports = ({
   ...opts
 }) => {
   const $ = loadHTML(html, { xmlMode, ...opts })
-  normalizeTags($, url, { normalizeHttp, ...opts })
-  // TODO: Normalize CSS
-  return $.html()
+  // NOTE: normalizeTags mutates `html`
+  // TODO: `normalizeHttp` should be default false into `getUrl` from metascraper
+  const vinylUrls = normalizeTags($, url, { normalizeHttp, ...opts })
+  return { html: $.html(), vinylUrls }
 }

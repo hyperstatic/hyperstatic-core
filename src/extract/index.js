@@ -1,21 +1,10 @@
 'use strict'
 
-const extractHtml = require('./html')
-const extractUrls = require('./urls')
+const fromHTML = require('./html')
+const fromUrls = require('./urls')
 
 module.exports = async opts => {
-  // // TODO: Normalize CSS
-  const html = await extractHtml(opts)
-  // // TODO: Add URLs from CSS
-  const [originalUrls, bundleUrls] = await Promise.all([
-    extractUrls(opts),
-    extractUrls({ ...opts, html })
-  ])
-
-  const urls = originalUrls.map((originalUrl, index) => ({
-    originalUrl,
-    bundleUrl: bundleUrls[index]
-  }))
-
+  const { html, vinylUrls } = await fromHTML(opts)
+  const urls = await fromUrls(vinylUrls)
   return { html, urls }
 }
