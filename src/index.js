@@ -7,6 +7,7 @@ const getHTML = require('html-get')
 const { size } = require('lodash')
 const aigle = require('aigle')
 const mitt = require('mitt')
+const os = require('os')
 
 const countFiles = promisify(require('count-files'))
 
@@ -17,17 +18,13 @@ const extract = require('./extract')
 const RE_LAST_TRAILING_SLASH = /\/$/
 
 const getFileName = ({ pathname }) => {
-  const filename =
-    pathname === '/' ? 'index' : pathname.replace(RE_LAST_TRAILING_SLASH, '')
+  const filename = pathname === '/' ? 'index' : pathname.replace(RE_LAST_TRAILING_SLASH, '')
   return `${filename}.html`
 }
 
-const bundler = async (
-  url,
-  { total, cache, emitter, output, prerender, ...opts }
-) => {
+const bundler = async (url, { total, cache, emitter, output, prerender }) => {
   const { html: originalHtml } = await getHTML(url, { prerender })
-  const { urls, html } = await extract({ html: originalHtml, url, opts })
+  const { urls, html } = await extract({ html: originalHtml, url })
   const downloader = bundleFile({ cache, output, emitter })
   const filename = getFileName(new URL(url))
   let time = timeSpan()
@@ -54,10 +51,16 @@ const bundle = async (
 
 module.exports = (
   targetUrls,
-  { output, cache = new Set(), emitter = mitt(), ...opts }
+  {
+    concurrence = os.cpus().length,
+    output,
+    cache = new Set(),
+    emitter = mitt(),
+    ...opts
+  }
 ) => {
   getUrls(targetUrls)
-    .then(urls => bundle(urls, { output, emitter, cache, ...opts }))
+    .then(urls => bundle(urls, { concurrence, output, emitter, cache, ...opts }))
     .catch(error => emitter.emit('error', error))
 
   return emitter

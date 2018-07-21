@@ -4,24 +4,17 @@ const cheerio = require('cheerio')
 
 const normalizeTags = require('./normalize-tags')
 
-const loadHTML = (html, { xmlMode }) =>
+const loadHTML = html =>
   cheerio.load(html, {
-    xmlMode,
+    xmlMode: false,
     lowerCaseTags: true,
     decodeEntities: true,
     lowerCaseAttributeNames: true
   })
 
-module.exports = ({
-  html,
-  url,
-  normalizeHttp = true,
-  xmlMode = false,
-  ...opts
-}) => {
-  const $ = loadHTML(html, { xmlMode, ...opts })
+module.exports = ({ html, url }) => {
+  const $ = loadHTML(html)
   // NOTE: normalizeTags mutates `html`
-  // TODO: `normalizeHttp` should be default false into `getUrl` from metascraper
-  const vinylUrls = normalizeTags($, url, { normalizeHttp, ...opts })
+  const vinylUrls = normalizeTags($, url)
   return { html: $.html(), vinylUrls }
 }

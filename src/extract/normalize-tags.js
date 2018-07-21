@@ -8,7 +8,7 @@ const { TAGS } = require('html-urls')
 
 const VinylUrl = require('./vinyl-url')
 
-module.exports = ($, url, opts) =>
+module.exports = ($, url) =>
   reduce(
     TAGS,
     (acc, htmlTags, propName) => {
@@ -17,7 +17,7 @@ module.exports = ($, url, opts) =>
         const attr = el.attr(propName)
         if (!isNil(attr)) {
           try {
-            const resourceUrl = getUrl(url, attr, opts)
+            const resourceUrl = getUrl(url, attr)
             const vinylUrl = VinylUrl(resourceUrl)
             debug(resourceUrl, '→', vinylUrl.pathname)
             el.attr(propName, vinylUrl.pathname)
