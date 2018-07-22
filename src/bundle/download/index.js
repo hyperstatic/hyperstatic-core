@@ -30,7 +30,7 @@ module.exports = ({ output, emitter, cache, rewrite }) => async ({
     }
 
     await outputFile(filepath, data)
-    emitter.emit('file:created', { pathname })
+    emitter.emit('file:created', { url, pathname })
   } catch (err) {
     await outputFile(filepath, data)
     emitter.emit('file:error', { url, pathname, err })

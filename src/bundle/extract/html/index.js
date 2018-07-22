@@ -10,6 +10,9 @@ module.exports = ({ html, url }) => {
   const $ = loadHTML(html)
   const tags = fromTags($, url)
   const stylesheets = fromStylesheets(url, tags.html)
-  const vinylUrls = concat(tags.vinylUrls, stylesheets.vinylUrls)
-  return { html: stylesheets.html, vinylUrls }
+
+  return {
+    html: stylesheets.html,
+    vinylUrls: concat(tags.vinylUrls, stylesheets.vinylUrls)
+  }
 }

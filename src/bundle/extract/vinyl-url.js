@@ -5,9 +5,8 @@ const { extname } = require('path')
 const clearQueryString = require('./clear-query-string')
 
 const getBundleUrl = url => {
-  const { pathname, search, hostname } = new URL(url)
-  const baseUrl = `${pathname}${search}`
-  return `/${hostname}${baseUrl}`
+  const { pathname, hostname } = new URL(url)
+  return `/${hostname}${pathname}`
 }
 
 module.exports = url => {
