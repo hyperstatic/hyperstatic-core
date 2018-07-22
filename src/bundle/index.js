@@ -23,8 +23,8 @@ const getFileName = ({ pathname }) => {
 
 const bundle = async (url, { total, cache, emitter, output, prerender }) => {
   const { html: originalHtml } = await getHTML(url, { prerender })
-  const { urls, html } = await extract({ html: originalHtml, url })
-  const downloader = download({ cache, output, emitter })
+  const { urls, html, rewrite } = await extract({ html: originalHtml, url })
+  const downloader = download({ cache, output, emitter, rewrite })
   const filename = getFileName(new URL(url))
   let time = timeSpan()
   await aigle.each(urls, downloader)

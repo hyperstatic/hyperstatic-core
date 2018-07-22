@@ -1,16 +1,16 @@
 'use strict'
 
 const { outputFile } = require('fs-extra')
+const { forEach, get } = require('lodash')
 const download = require('download')
-const cssUrls = require('css-urls')
-const { URL } = require('url')
 const path = require('path')
 
-module.exports = ({ output, emitter, cache }) => async url => {
-  const { originalUrl, bundleUrl } = url
-  const { pathname } = new URL(bundleUrl)
-
-  if (cache.has(bundleUrl)) {
+module.exports = ({ output, emitter, cache, rewrite }) => async ({
+  extension,
+  url,
+  pathname
+}) => {
+  if (cache.has(url)) {
     emitter.emit('file:skipped', { pathname })
     return
   }
@@ -19,14 +19,21 @@ module.exports = ({ output, emitter, cache }) => async url => {
   let data = ''
 
   try {
-    data = await download(originalUrl)
-    if (cssUrls.isCss(originalUrl)) console.log('NEED TO REWRITE', originalUrl)
+    data = await download(url)
+    const rewriter = get(rewrite, url)
+
+    if (rewriter) {
+      forEach(rewriter, ({ url, originalUrl }) => {
+        data = data.toString().replace(originalUrl, url)
+      })
+    }
+
     await outputFile(filepath, data)
     emitter.emit('file:created', { pathname })
   } catch (err) {
     await outputFile(filepath, data)
-    emitter.emit('file:error', { url: originalUrl, bundleUrl, pathname, err })
+    emitter.emit('file:error', { url, pathname, err })
   }
 
-  cache.add(bundleUrl)
+  cache.add(url)
 }

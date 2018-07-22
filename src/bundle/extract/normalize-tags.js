@@ -6,6 +6,7 @@ const { getUrl } = require('@metascraper/helpers')
 const { reduce, isNil } = require('lodash')
 const { TAGS } = require('html-urls')
 
+const isFileUrl = require('./is-file-url')
 const VinylUrl = require('./vinyl-url')
 
 module.exports = ($, url) =>
@@ -15,7 +16,7 @@ module.exports = ($, url) =>
       $(htmlTags.join(',')).each(function () {
         const el = $(this)
         const attr = el.attr(propName)
-        if (!isNil(attr)) {
+        if (!isNil(attr) && isFileUrl(attr)) {
           try {
             const resourceUrl = getUrl(url, attr)
             const vinylUrl = VinylUrl(resourceUrl)
