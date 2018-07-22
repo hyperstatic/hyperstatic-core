@@ -2,9 +2,9 @@
 
 const cheerio = require('cheerio')
 
-module.exports = (html, { xmlMode }) =>
+module.exports = html =>
   cheerio.load(html, {
-    xmlMode,
+    xmlMode: false,
     lowerCaseTags: true,
     decodeEntities: true,
     lowerCaseAttributeNames: true
