@@ -24,7 +24,8 @@ module.exports = ({ output, emitter, cache, rewrite }) => async ({
 
     if (rewriter) {
       forEach(rewriter, ({ url, originalUrl }) => {
-        data = data.toString().replace(originalUrl, url)
+        const regex = new RegExp(originalUrl, 'gi')
+        data = data.toString().replace(regex, url)
       })
     }
 

@@ -6,11 +6,11 @@ const { getUrl } = require('@metascraper/helpers')
 const { reduce, isNil } = require('lodash')
 const { TAGS } = require('html-urls')
 
-const isFileUrl = require('./is-file-url')
-const VinylUrl = require('./vinyl-url')
+const isFileUrl = require('../is-file-url')
+const VinylUrl = require('../vinyl-url')
 
-module.exports = ($, url) =>
-  reduce(
+module.exports = ($, url) => {
+  const vinylUrls = reduce(
     TAGS,
     (acc, htmlTags, propName) => {
       $(htmlTags.join(',')).each(function () {
@@ -33,3 +33,6 @@ module.exports = ($, url) =>
     },
     []
   )
+
+  return { html: $.html(), vinylUrls }
+}
