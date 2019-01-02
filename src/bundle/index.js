@@ -4,6 +4,7 @@ const { emptyDir, outputFile } = require('fs-extra')
 const timeSpan = require('time-span')
 const getHTML = require('html-get')
 const { size } = require('lodash')
+const { URL } = require('url')
 const aigle = require('aigle')
 
 const { promisify } = require('util')

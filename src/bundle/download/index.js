@@ -1,7 +1,7 @@
 'use strict'
 
+const { isEmpty, forEach, get } = require('lodash')
 const { outputFile } = require('fs-extra')
-const { forEach, get } = require('lodash')
 const download = require('download')
 const path = require('path')
 
@@ -10,16 +10,15 @@ module.exports = ({ output, emitter, cache, rewrite }) => async ({
   url,
   pathname
 }) => {
-  if (cache.has(url)) {
+  if (isEmpty(pathname) || cache.has(url)) {
     emitter.emit('file:skipped', { pathname })
     return
   }
 
   const filepath = path.join(output, pathname)
-  let data = ''
 
   try {
-    data = await download(url)
+    let data = await download(url)
     const rewriter = get(rewrite, url)
 
     if (rewriter) {
@@ -32,7 +31,7 @@ module.exports = ({ output, emitter, cache, rewrite }) => async ({
     await outputFile(filepath, data)
     emitter.emit('file:created', { url, pathname })
   } catch (err) {
-    await outputFile(filepath, data)
+    await outputFile(filepath, '')
     emitter.emit('file:error', { url, pathname, err })
   }
 
