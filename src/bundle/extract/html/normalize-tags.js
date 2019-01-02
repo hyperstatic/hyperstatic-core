@@ -3,7 +3,7 @@
 const debug = require('debug')('hyperstatic:normalize')
 const debugError = require('debug')('hyperstatic:normalize:error')
 const { getUrl } = require('@metascraper/helpers')
-const { reduce, isNil } = require('lodash')
+const { reduce } = require('lodash')
 const { TAGS } = require('html-urls')
 
 const isFileUrl = require('../is-file-url')
@@ -16,7 +16,7 @@ module.exports = ($, url) => {
       $(htmlTags.join(',')).each(function () {
         const el = $(this)
         const attr = el.attr(propName)
-        if (!isNil(attr) && isFileUrl(attr)) {
+        if (isFileUrl(attr)) {
           try {
             const resourceUrl = getUrl(url, attr)
             const vinylUrl = VinylUrl(resourceUrl)
