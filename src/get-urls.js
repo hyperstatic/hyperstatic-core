@@ -3,12 +3,19 @@
 const fromXML = require('xml-urls')
 const aigle = require('aigle')
 
-const resolveUrl = async url => (fromXML.isXml(url) ? fromXML(url) : [url])
+const resolveUrl = async (url, opts) =>
+  fromXML.isXmlUrl(url) ? fromXML(url, opts) : [url]
 
-const iretator = async (set, url) =>
-  new Set([...set, ...(await resolveUrl(url))])
+const iterator = async ({ set, url, opts }) => {
+  const urls = await resolveUrl(url, opts)
+  return new Set([...set, ...urls])
+}
 
-module.exports = async urls => {
-  const set = await aigle.reduce(urls, iretator, new Set())
+module.exports = async (urls, opts) => {
+  const set = await aigle.reduce(
+    urls,
+    (set, url) => iterator({ set, url, opts }),
+    new Set()
+  )
   return Array.from(set)
 }

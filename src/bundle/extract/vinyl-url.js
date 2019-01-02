@@ -1,6 +1,7 @@
 'use strict'
 
 const { extname } = require('path')
+const { URL } = require('url')
 
 const clearQueryString = require('./clear-query-string')
 

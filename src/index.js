@@ -16,7 +16,7 @@ module.exports = (
     ...opts
   }
 ) => {
-  getUrls(targetUrls)
+  getUrls(targetUrls, opts)
     .then(urls =>
       bundle(urls, { concurrence, output, emitter, cache, ...opts })
     )
