@@ -1,8 +1,9 @@
 'use strict'
 
 const parseDomain = require('parse-domain')
-const { isMatch, isObject, memoize, isNil, find } = require('lodash')
+const { isMatch, isObject, memoize, isEmpty, isNil, find } = require('lodash')
 const isFile = require('check-file')
+
 const debug = require('debug')('hyperstatic:is-file-url')
 
 const WHITELIST_URLS = [
@@ -12,11 +13,10 @@ const WHITELIST_URLS = [
 
 const clearQueryString = require('./clear-query-string')
 
-const BLACKLIST_URLS = [
-  { domain: 'now', tld: 'sh' }
-]
+const BLACKLIST_URLS = [{ domain: 'now', tld: 'sh' }]
 
-const findUrl = (collection, urlObj) => find(collection, (urlObj2) => isMatch(urlObj, urlObj2))
+const findUrl = (collection, urlObj) =>
+  find(collection, urlObj2 => isMatch(urlObj, urlObj2))
 
 const parseUrl = url => parseDomain(url) || {}
 
@@ -33,6 +33,7 @@ const isBlackList = url => {
 }
 
 const isFileUrl = input => {
+  if (isEmpty(input)) return false
   const url = clearQueryString(input)
   const is = isBlackList(url) ? false : isWhiteList(url) || isFile(url)
   debug(`${url} → ${is}`)

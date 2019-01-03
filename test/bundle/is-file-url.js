@@ -4,9 +4,22 @@ const test = require('ava')
 
 const isFileUrl = require('../../src/bundle/extract/is-file-url')
 
+test('false', t => {
+  t.is(false, isFileUrl())
+  t.is(false, isFileUrl(null))
+  t.is(false, isFileUrl(undefined))
+  t.is(false, isFileUrl({}))
+  t.is(false, isFileUrl(''))
+})
+
 test('spotify', t => {
   t.is(false, isFileUrl('https://spotify.com'))
-  t.is(true, isFileUrl('https://open.spotify.com/user/1170688168?si=3Ao2GMS_R4iJMtrINB2rYQ'))
+  t.is(
+    true,
+    isFileUrl(
+      'https://open.spotify.com/user/1170688168?si=3Ao2GMS_R4iJMtrINB2rYQ'
+    )
+  )
 })
 
 test('vimeo', t => {
